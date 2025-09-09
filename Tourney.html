@@ -16,8 +16,8 @@
 
     <header class="header" id="inicio">
         <div class="contenedor head">
-            <h1 class="titulo">Torneo de Futbol USAC</h1>
-            <p class="copy">Clasificacion y clasificatoria del torneo</p>
+            <h1 class="titulo">Analizador para Torneos de Futbol</h1>
+            <p class="copy">Analizador léxico para clasificatoria en un torneo de futbol</p>
         </div>
     </header>    
 
@@ -38,50 +38,73 @@
                     </div>
                     <div class="service">
                         <h3 class="n-service"><span class="number">3</span> Generar reportes</h3>
-                        <p>Genera reportes sobre los datos pre establecidos</p>
+                        <p>Genera un reporte HTML con las tablas de posiciones finales, estadísticas individuales y de equipos. </p>
                     </div>
                     <div class="service">
                         <h3 class="n-service"><span class="number">4</span> Exportar archivo brackets</h3>
-                        <p>Exporta un archivo bracket con los datos actualizados</p>
+                        <p>Exporta diagramas de brackets, de la eliminación, para poder ver graficas con gravhiz</p>
                     </div>
 
                 </div>
             </div>    
         </section>
 
-        <section class="contenedor" id="expertos">
+        <section class="contenedor" id="items">
             <h2 class="subtitulo">¿Que operación deseas realizar?</h2>
-            <section class="experts">
-                <div class="cont-expert">
+            <section class="opciones">
+
+                <div class="cont-item">
+                    <a href="#subirArchivo" class="boton">Cargar Archivo</a>
                     <img src="imagenes/archivo.png" alt="">
-                    <h3 class="n-expert">Cargar Archivo</h3>
+
                 </div>
-                <div class="cont-expert">
+                <div class="cont-item">
                     <img src="imagenes/analizar.png" alt="">
-                    <h3 class="n-expert">Analizar Archivo</h3>
+                    <button class="boton">Analizar Archivo</button>
                 </div>
-                <div class="cont-expert">
+                <div class="cont-item">
+                    
+                    <button class="boton">Generar Reportes</button>
                     <img src="imagenes/crearReporte.png" alt="">
-                    <h3 class="n-expert">Generar Reportes</h3>
+
                 </div>
-                <div class="cont-expert">
+                <div class="cont-item">
                     <img src="imagenes/exportarBracket.png" alt="">
-                    <h3 class="n-expert">Exportar Brackets</h3>
+                    <button class="boton">Exportar Eliminatoria</button>
                 </div>
             </section>
 
         </section>
     </main>
+    
+    <section class="contenedor">
+        <h2 class="subtitulo">Cargar Archivo .txt</h2>
+        <div class="container" id="subirArchivo">
+            <div class="right-panel">
+                <h2 class="n-service">Leer txt dinámicamente</h2>
+                <div class="upload-box">
+                    <input type="file" id="txtFile" accept=".txt">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div id="resultado"></div>
+    
 
     <footer id="contacto">
-        <div class="contact-us">
-            <h2 class="brand">Guisela Mishel Monroy Ovalle</h2>
+        <div class="datosPersonales">
+            <div class="texto">
+            <h2 class="brand">Guisela Mishell Monroy Ovalle</h2>
             <h3 class="letras">Carnet: 202404409</h3>
-            <p class="letras">TourneyJS: Analizador Léxico para Gestión de Torneos Deportivos </p>
+            <p class="letras">TourneyJS: Analizador Léxico para Gestión de Torneos Deportivos</p>
+            <p class="letras">Lenguajes formales de programación | seccion B-</p>
+        </div>
+        <img src="imagenes/gatito.png" alt="Gatito" class="gatito">
         </div>
     </footer>
 
 
-    <script src="menu.js"></script>
+    <script src="LeerArchivoTXT.js"></script>
 </body>
 </html>
