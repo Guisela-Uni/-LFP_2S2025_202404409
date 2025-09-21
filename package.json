@@ -1,0 +1,12 @@
+{
+    "name": "lfp-proyecto1-202404409",
+    "version": "1.0.0",
+    "description": "Proyecto 1 - habilitar módulos ES (type: module)",
+    "main": "main.js",
+    "type": "module",
+    "scripts": {
+    "start": "node ."
+    },
+    "author": "202404409",
+    "license": "MIT"
+}

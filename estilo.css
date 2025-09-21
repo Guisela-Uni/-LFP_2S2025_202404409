@@ -20,7 +20,7 @@ body{
 }
 header{
     height: 75vh;
-    background-image: linear-gradient(120deg, rgba(213, 252, 121, 0.542) 0%, rgba(150, 230, 161, 0.554) 100%), url(../[LFP]Proyecto1_202404409/imagenes/futbol.jpg);
+    background-image: linear-gradient(120deg, rgba(213, 252, 121, 0.542) 0%, rgba(150, 230, 161, 0.554) 100%), url(../LFP_Proyecto1_202404409/imagenes/futbol.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -120,6 +120,22 @@ h3{
 .leerArchivo{
     background-color: #43e97b
 }
+textarea {
+    width: 90%;
+    height: 200px;
+    margin: 20px auto;
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    resize: vertical; /* Permite redimensionar verticalmente */
+}
+#reportes{
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
 .boton {
     background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
     color: rgb(0, 0, 0);
@@ -177,6 +193,24 @@ h3{
     border: 1px solid #ccc;
     font-size: 1em;
 }
+/* Para JS de Leer Archivo txt*/
+.seccion {
+    margin-bottom: 30px;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}
+
 /*footer*/
 #contacto {
     background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
