@@ -31,14 +31,14 @@ ELIMINACION {
       goleadores: [
         goleador: "Pedro Martínez" [minuto: 15],
         goleador: "Pedro Martínez" [minuto: 45],
-        goleador: "Valeria Cruz" [minuto: 67]
+        goleador: "Valeria Cruz" [minuto: 67]@
       ]
     ],
     partido: "Águilas United" vs "Tigres Academy" [
       resultado: "2-0",
       goleadores: [
         goleador: "Diego Ramírez" [minuto: 22],
-        goleador: "Sofía Hernández" [minuto: 75]
+        goleador: "Sofía Hernández" [minuto: 75]$
       ]
     ]
   ],

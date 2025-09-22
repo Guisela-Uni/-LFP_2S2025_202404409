@@ -60,7 +60,7 @@
                 </div>
                 <div class="cont-item">
                     <img src="imagenes/analizar.png" alt="">
-                    <button class="boton analizar">Analizar Archivo</button>
+                    <button id="analizar" class="boton analizar">Analizar Archivo</button>
                 </div>
                 <div class="cont-item">
                     <a class="boton presionar" href="#reportes">Generar Reportes</a>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="cont-item">
                     <img src="imagenes/exportarBracket.png" alt="">
-                    <button class="boton">Exportar Eliminatoria</button>
+                    <button id="dowlandGraphiz" class="boton">Exportar Eliminatoria</button>
                 </div>
             </section>
 
@@ -90,10 +90,16 @@
     </section>
 
 
-    
+    <div class="reportes_analisis">
+        <h2 class="subtitulo">Analisis Léxico</h2>
+        <div id="analisisReporte"></div> <!-- para mostrar el reporte del analisis -->
+        <button id="dowlandLexico" class="boton2 ">Descargar Analisis</button>
+    </div>
+
     <div id="reportes">
         <h2 class="subtitulo">Reportes Generados</h2>
         <div id="reporte"></div> <!-- para mostrar el reporte generado -->
+        <button id="dowland" class="boton2 ">Descargar Reporte</button>
     </div>
     
 
@@ -110,7 +116,7 @@
     </footer>
 
 
-    <script src="AnalizarArchivo.js"></script>
-    <script src="LeerEliminatoria.js"></script>
+    <script type="module" src="analizador_texto.js"></script>
+    <script type="module" src="LeerEliminatoria.js"></script>
 </body>
 </html>

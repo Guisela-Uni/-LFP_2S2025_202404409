@@ -20,7 +20,7 @@ body{
 }
 header{
     height: 75vh;
-    background-image: linear-gradient(120deg, rgba(213, 252, 121, 0.542) 0%, rgba(150, 230, 161, 0.554) 100%), url(../LFP_Proyecto1_202404409/imagenes/futbol.jpg);
+    background-image: linear-gradient(120deg, rgba(213, 252, 121, 0.542) 0%, rgba(150, 230, 161, 0.554) 100%), url(imagenes/futbol.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -88,6 +88,18 @@ header{
     justify-content: center;
     flex-wrap: wrap;
 }
+.reportes_analisis{
+    width: 50%;
+    justify-content: center;
+    display: wrap;
+    max-width: 600px;
+    overflow: hidden;
+    margin: auto;
+    padding: 70px 0;
+    color: black;
+    font-size: 15px;
+    font-family: 'Times New Roman', Times, serif;
+}
 .opciones{
     display: flex;
     margin-top: 50px;
@@ -148,6 +160,19 @@ textarea {
     text-decoration: none;
     transition: background-color 0.3s ease;
     font-weight: 500;
+}
+.boton2 {
+    background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: 'Times New Roman', Times, serif;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    font-weight: 400;
 }
 .boton:hover {
     transform: translateY(-2px);

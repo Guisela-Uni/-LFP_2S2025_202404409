@@ -5,8 +5,11 @@
     "main": "main.js",
     "type": "module",
     "scripts": {
-    "start": "node ."
+        "start": "node ."
     },
     "author": "202404409",
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+        "graphviz": "^0.0.9"
+    }
 }

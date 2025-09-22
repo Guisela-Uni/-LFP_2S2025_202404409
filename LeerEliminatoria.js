@@ -206,23 +206,21 @@ function mostrarTablas(torneo, partidos, resumenEquipos, goleadores) {
   let html = "";
 
   // Mostrar info del torneo
-  if (torneo && Object.keys(torneo).length > 0) {
-    html += `<div class="seccion">
-      <h2>${torneo.nombre || "Torneo"}</h2>
-      <p><strong>Equipos:</strong> ${torneo.equipos || "-"}</p>
-      <p><strong>Sede:</strong> ${torneo.sede || "-"}</p>
-    </div>`;
-  }
+  html += `<div class="seccion">
+    <h2>${torneo && torneo.nombre ? torneo.nombre : "Torneo"}</h2>
+    <p><strong>Equipos:</strong> ${torneo && torneo.equipos ? torneo.equipos : "-"}</p>
+    <p><strong>Sede:</strong> ${torneo && torneo.sede ? torneo.sede : "-"}</p>
+  </div>`;
 
   // 1. Backet de eliminación
   const fasesOrden = ["cuartos", "semifinal", "final"];
   html += `<div class="seccion"><h3>🏆 Backet de Eliminación</h3>`;
-  for (const fase of fasesOrden) {
+  fasesOrden.forEach(fase => {
+    html += `<h4>Fase: ${fase.charAt(0).toUpperCase() + fase.slice(1)}</h4>`;
     const partidosFase = partidos.filter(p => p.fase === fase);
+    html += `<table border="1" cellspacing="0" cellpadding="5">
+      <thead><tr><th>Partido</th><th>Resultado</th><th>Ganador</th></tr></thead><tbody>`;
     if (partidosFase.length > 0) {
-      html += `<h4>Fase: ${fase.charAt(0).toUpperCase() + fase.slice(1)}</h4>`;
-      html += `<table border="1" cellspacing="0" cellpadding="5">
-        <thead><tr><th>Partido</th><th>Resultado</th><th>Ganador</th></tr></thead><tbody>`;
       partidosFase.forEach(p => {
         html += `<tr>
           <td>${p.nombre}</td>
@@ -230,9 +228,11 @@ function mostrarTablas(torneo, partidos, resumenEquipos, goleadores) {
           <td>${p.ganador}</td>
         </tr>`;
       });
-      html += `</tbody></table>`;
+    } else {
+      html += `<tr><td colspan="3">No hay partidos en esta fase.</td></tr>`;
     }
-  }
+    html += `</tbody></table>`;
+  });
   html += `</div>`;
 
   // 2. Estadísticas por equipo
@@ -241,27 +241,29 @@ function mostrarTablas(torneo, partidos, resumenEquipos, goleadores) {
     <thead><tr>
       <th>Equipo</th><th>Partidos Jugados</th><th>Ganados</th><th>Perdidos</th><th>Última Fase</th>
     </tr></thead><tbody>`;
-  for (const equipo in resumenEquipos) {
-    const r = resumenEquipos[equipo];
-    html += `<tr>
-      <td>${equipo}</td>
-      <td>${r.jugados}</td>
-      <td>${r.ganados}</td>
-      <td>${r.perdidos}</td>
-      <td>${r.ultimaFase ? r.ultimaFase.charAt(0).toUpperCase() + r.ultimaFase.slice(1) : "-"}</td>
-    </tr>`;
+  if (resumenEquipos && Object.keys(resumenEquipos).length > 0) {
+    for (const equipo in resumenEquipos) {
+      const r = resumenEquipos[equipo];
+      html += `<tr>
+        <td>${equipo}</td>
+        <td>${r.jugados}</td>
+        <td>${r.ganados}</td>
+        <td>${r.perdidos}</td>
+        <td>${r.ultimaFase ? r.ultimaFase.charAt(0).toUpperCase() + r.ultimaFase.slice(1) : "-"}</td>
+      </tr>`;
+    }
+  } else {
+    html += `<tr><td colspan="5">No hay datos de equipos.</td></tr>`;
   }
   html += `</tbody></table></div>`;
 
   // 3. Reporte de goleadores
   html += `<div class="seccion"><h3>⚽ Reporte de Goleadores</h3>`;
-  if (goleadores.length === 0) {
-    html += `<p>No hay datos de goleadores.</p>`;
-  } else {
-    html += `<table border="1" cellspacing="0" cellpadding="5">
-      <thead><tr>
-        <th>Posición</th><th>Jugador</th><th>Equipo</th><th>Goles</th><th>Minutos</th>
-      </tr></thead><tbody>`;
+  html += `<table border="1" cellspacing="0" cellpadding="5">
+    <thead><tr>
+      <th>Posición</th><th>Jugador</th><th>Equipo</th><th>Goles</th><th>Minutos</th>
+    </tr></thead><tbody>`;
+  if (goleadores && goleadores.length > 0) {
     goleadores.forEach(g => {
       html += `<tr>
         <td>${g.posicion}</td>
@@ -271,9 +273,10 @@ function mostrarTablas(torneo, partidos, resumenEquipos, goleadores) {
         <td>${g.minutos.join(", ")}</td>
       </tr>`;
     });
-    html += `</tbody></table>`;
+  } else {
+    html += `<tr><td colspan="5">No hay datos de goleadores.</td></tr>`;
   }
-  html += `</div>`;
+  html += `</tbody></table></div>`;
 
   contenedor.innerHTML = html;
 }
@@ -319,7 +322,7 @@ function procesarTorneo(texto) {
 }
 
 function mostrarEnHTML(torneo, equipos) {
-  const contenedor = document.getElementById("resultado");
+  const contenedor = document.getElementById("reporte");
   contenedor.innerHTML = "";
 
   // Mostrar torneo
