@@ -1,11 +1,12 @@
 import { Lexico } from './lexico.js';
+import { extraerAtributos, generarDot } from './utils.js';
 
 //elementos para manipular el DOM
 const txtFile = document.getElementById('txtFile'); // id correcto
 const textArea = document.getElementById('textArea'); // nombre consistente
 const btnAnalizar = document.querySelector('.analizar');
 const analisisReporte = document.getElementById('analisisReporte');
-const reporteDiv = document.getElementById('reporte');
+const reporteBtn = document.getElementById('btnReporte');
 const btnDowland = document.getElementById('dowlandLexico');
 const btnDowlandGraphiz = document.getElementById('dowlandGraphiz');
 
@@ -164,33 +165,37 @@ btnDowlandGraphiz.addEventListener('click', function () {
     }
 
     try{
-        const lexico = new Lexico(texto); //crear instancia de Lexico
-        const {tokens} = lexico.analizar();
+        const lexico = new Lexico(texto); // Crear instancia de Lexico
+        const { tokens } = lexico.analizar(); // Obtener tokens
 
-        const nombreTorneo = tokens.find(t => t.tipo === 'Atributo' && t.lexema === 'nombre') ;
-        const sedeTorneo = tokens.find(t => t.tipo === 'Atributo' && t.lexema === 'sede') ;
-        let dot = `
-        digraph G {
-            graph [labelloc="t", fontsize=20];
-            node [shape=box, style=filled, color="#f0f0f0", fontname="Arial"];
+        const atributos = extraerAtributos(tokens); // Extraer pares atributo-valor
+        const dot = generarDot(atributos); // Generar código DOT con los atributos
 
-            Torneo [label="Nombre: ${nombreTorneo?.valor || 'Desconocido'}"];
-            Sede [label="Sede: ${sedeTorneo?.valor || 'Desconocida'}"];
-
-            Torneo -> Sede [label="se juega en", color="#0077cc"];
-        }
-
-        `;
         const blob = new Blob([dot], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob); // Crear una URL para el Blob
-        
+        const url = URL.createObjectURL(blob);
+
         const a = document.createElement('a');
         a.href = url;
         a.download = 'torneo_graphiz.txt';
         a.click();
+
         URL.revokeObjectURL(url); // Liberar la URL creada
+
     } catch(error){
         console.error("Error  al generar el graphviz:", error);
         alert("Ocurrió un error al generar el archivo Graphviz:\n" + error.message);
     }
 })
+
+reporteBtn.addEventListener('click', function () {
+    const texto = textArea.value.trim();
+    if (texto === "") {
+        alert("No se ha cargado ningún archivo, por favor cargue uno.");
+        return;
+    }
+
+    const resumen = document.getElementById("tablaResumen");
+    const fases = document.getElementById("tablaFases");
+
+    procesarEliminacion(texto, resumen, fases);
+});

@@ -54,9 +54,8 @@ export class Lexico {
                 }
 
                 //verificar si viene un simbolo
-                if (Object.keys(Simbolos).includes(char)) {
-                    //crea token y lo agrega a la lista con su tipo y lexema
-                    this.tokens.push(new token(Simbolos[char], char, this.linea, this.columna)); 
+                if (Simbolos[char]) {
+                    this.tokens.push(new token(Simbolos[char], char, this.linea, this.columna));
                     this.avanzar();
                     continue;
                 }
