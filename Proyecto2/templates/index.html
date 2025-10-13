@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Traductor Java → Python (prototipo)</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Traductor Java → Python (en tiempo real)</h1>
+        <div class="panes">
+            <div class="pane">
+                <h2>Java (.java)</h2>
+                <textarea id="javaInput" placeholder="Pega aquí tu código Java"></textarea>
+            </div>
+            <div class="pane">
+                <h2>Python (.py)</h2>
+                <textarea id="pyOutput" readonly placeholder="Salida Python"></textarea>
+            </div>
+        </div>
+        <div class="footer">
+            <small>Prototipo: la traducción es heurística. Revisa siempre el código resultante.</small>
+        </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html>

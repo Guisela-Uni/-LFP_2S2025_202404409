@@ -7,7 +7,6 @@ export class Lexico {
         this.linea = 1;
         this.columna = 1;
         this.estado = "INICIO";
-        //this.currentChar = this.texto[this.position];
         this.tokens = [];
         this.errores = [];
     }
