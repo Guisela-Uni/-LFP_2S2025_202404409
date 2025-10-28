@@ -24,47 +24,61 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función principal para traducir el código
 
     function traducirCodigo() {
-        let codigoJava = javaCodeTextarea.value;
-        tokensReportDiv.innerHTML = '';
+    let codigoJava = javaCodeTextarea.value;
+    tokensReportDiv.innerHTML = '';
 
-        try {
-            // Preprocesamiento para extraer SOLO el cuerpo de main 
-            const regexMain = /public\s+static\s+void\s+main\s*\([^)]*\)\s*\{([\s\S]*)\}/;
-            const match = codigoJava.match(regexMain);
-            
-            if (match && match[1]) {
-                // Extraer el cuerpo de main y eliminar las llaves de la clase
-                codigoJava = match[1].trim();
-                // Eliminar la última llave de cierre de la clase si existe
-                if (codigoJava.endsWith('}')) {
-                    codigoJava = codigoJava.slice(0, -1).trim();
+    try {
+        // Buscar la posición donde empieza el método main
+        const mainInicio = codigoJava.indexOf('public static void main');
+        if (mainInicio !== -1) {
+            // Buscar la primera llave de apertura después del main
+            const llaveApertura = codigoJava.indexOf('{', mainInicio);
+            if (llaveApertura !== -1) {
+                // Contar llaves para encontrar el final del método main
+                let contador = 1;
+                let i = llaveApertura + 1;
+
+                while (i < codigoJava.length && contador > 0) {
+                    if (codigoJava[i] === '{') contador++;
+                    else if (codigoJava[i] === '}') contador--;
+                    i++;
+                }
+
+                // Extraer el cuerpo del método main
+                if (contador === 0) {
+                    codigoJava = codigoJava.slice(llaveApertura + 1, i - 1).trim();
+                } else {
+                    console.warn("No se cerró correctamente el método main. Usando código completo.");
                 }
             } else {
-                // Si no se encuentra main, usar el código completo (fallback)
-                console.warn("No se encontró el método main. Usando el código completo.");
+                console.warn("No se encontró la llave de apertura del método main.");
             }
-
-            // primero Análisis Léxico
-            const lexer = new Lexer(codigoJava);
-            const tokens = lexer.analizar();
-            const erroresLexicos = lexer.errors;
-
-            //segundo Análisis Sintáctico
-            const parser = new Parser(tokens);
-            const resultadoParser = parser.analizar();
-            const erroresSintacticos = resultadoParser.errors;
-            const codigoPython = resultadoParser.python;
-
-            pythonCodePre.textContent = codigoPython;
-            resultSection.style.display = 'block';
-            generarReportes(erroresLexicos, erroresSintacticos, tokens);
-
-        } catch (error) {
-            console.error("Error en la traducción:", error);
-            pythonCodePre.textContent = `// Error interno: ${error.message}`;
-            resultSection.style.display = 'block';
+        } else {
+            console.warn("No se encontró el método main. Usando el código completo.");
         }
+
+        // ===== Análisis Léxico =====
+        const lexer = new Lexer(codigoJava);
+        const tokens = lexer.analizar();
+        const erroresLexicos = lexer.errors;
+
+        // ===== Análisis Sintáctico =====
+        const parser = new Parser(tokens);
+        const resultadoParser = parser.analizar();
+        const erroresSintacticos = resultadoParser.errors;
+        const codigoPython = resultadoParser.python;
+
+        pythonCodePre.textContent = codigoPython;
+        resultSection.style.display = 'block';
+        generarReportes(erroresLexicos, erroresSintacticos, tokens);
+
+    } catch (error) {
+        console.error("Error en la traducción:", error);
+        pythonCodePre.textContent = `// Error interno: ${error.message}`;
+        resultSection.style.display = 'block';
     }
+}
+
 
     // función para generar y mostrar los reportes en el modal
     function generarReportes(erroresLexicos, erroresSintacticos, tokens) {
