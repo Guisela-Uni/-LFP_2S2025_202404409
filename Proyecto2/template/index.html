@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="imagenes/logoT.png">
+    <title>Traductor Java a Python</title>
+</head>
+<body>
+    <!-- Menú de opciones -->
+    <nav class="navbar">
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="#" class="menu-link">Archivo</a>
+                <ul class="submenu">
+                    <li><a href="#" class="submenu-item" id="newFile">Nuevo</a></li>
+                    <li><a href="#" class="submenu-item" id="openFile">Abrir</a></li>
+                </ul>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link">Ayuda</a>
+                <ul class="submenu">
+                    <li><a href="#" class="submenu-item" id="showHelp">Ver información</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Traductor Java → Python</h1>
+            <p class="subtitle">Utilizando Analizador Léxico y Sintáctico para traducción automática</p>
+        </header>
+
+        <!-- Área de código Java -->
+        <div class="editor-section">
+            <h2 class="section-title">Entrada de Código Java </h2>
+            <textarea id="javaCode" placeholder="// Escribe o pega el código Java aquí&#10;public class Ejemplo {&#10;    public static void main(String[] args) {&#10;        int x = 10;&#10;        if (x > 5) {&#10;            System.out.println(&quot;Hola Mundo&quot;);&#10;        }&#10;    }&#10;}"></textarea>
+            <div class="action-buttons">
+                <button class="btn" id="translateBtn">🔄 Traducir a Python</button>
+                <button class="btn btn-secondary" id="viewTokensBtn">📊 Ver Tokens</button>
+            </div>
+        </div>
+
+        <!-- Área de salida Python -->
+        <div class="editor-section" id="resultSection">
+            <h2 class="section-title">
+                Código Python Traducido
+                <button id="savePythonBtn">💾 Guardar como .py</button>
+            </h2>
+            <pre id="pythonCode"># El código Python aparecerá aquí después de la traducción</pre>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar tokens -->
+    <div id="tokensModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Reporte de Tokens Léxicos</h2>
+                <button class="close-modal" id="closeTokensModal">&times;</button>
+            </div>
+            <div id="tokensReport"></div>
+        </div>
+    </div>
+
+    <!-- Modal de ayuda -->
+    <div id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2> Información </h2>
+                <button class="close-modal" id="closeHelpModal">&times;</button>
+            </div>
+            <div class="help-content">
+                <p>Esta aplicación traduce código Java a Python utilizando análisis léxico y sintáctico personalizado.</p>
+                
+                <h3>Información del estudiante</h3>
+                <ul>
+                    <li><strong>Nombre:</strong> Guisela Mishell Monroy Ovalle.</li>
+                    <li><strong>Carnet:</strong> 202404409</li>
+                    <li><strong>Curso:</strong> Laboratorio de lenguajes formales de programación, sección B-</li>
+                </ul>
+
+                <h3>Objetivo del traductor</h3>
+                <ul>
+                    <p>El objetivo es comprender como un compilador funciona a la hora de traducir el codigo conocido como un lenguaje de programación
+                        a el lenguaje de máquina, en este caso se traduce de Java a Python utilizando técnicas de análisis léxico y sintáctico. 
+                        Desarrollando tokens que sirven para que cada analizador pueda analizar el codigo fuente y traducirlo al lenguaje destino, en este caso de Java a Python.
+                    </p>
+                </ul>
+
+                <h3>NOTA ⚠️</h3>
+                <p>Al ser un traductor básico con fines de traducción de código liger, NO soporta todas las características de Java, como clases complejas, herencia, o manejo de excepciones avanzado.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input file oculto para abrir archivos -->
+    <input type="file" id="fileInput" accept=".java" style="display: none;">
+
+    <script type="module" src="../main.js"></script>
+</body>
+</html>
+

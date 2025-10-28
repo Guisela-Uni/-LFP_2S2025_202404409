@@ -1,7 +1,6 @@
 import { Token, ReservedWords } from "../Token/token.js";
-import { Error } from "../Error/Error.js";
+import { Error } from "../Errores/error.js";
 
-// LEXER
 export class Lexer {
     // constructor
     constructor(texto) {
@@ -28,6 +27,14 @@ export class Lexer {
             if (char === "\n") { this.linea++; this.columna = 1; this.avanzar(); continue; }
 
             // inicializado en 0
+            if (char === "/") {
+                // verificar si es un comentario de una línea '//'
+                if (this.pos + 1 < this.texto.length && this.texto[this.pos + 1] === "/") {
+                    this.recorrerComentario();
+                    continue;
+                }
+            }
+
             if (this.esLetra(char)) {
                 this.recorrerIdentificador();
                 continue;
@@ -77,11 +84,12 @@ export class Lexer {
             this.avanzar();
         }
 
+        // verificar si es palabra reservada
         let esReservada = false;
         let tipoReservada = "";
-    
+
         for (let palabra in ReservedWords) {
-            if (palabra === buffer) {
+            if (palabra.toLowerCase() === buffer.toLowerCase()) {
                 esReservada = true;
                 tipoReservada = ReservedWords[palabra];
                 break; 
@@ -95,21 +103,77 @@ export class Lexer {
         }
     }
     
+    // Si es un numero, lo recorremos, para validar que no haya decimales como 1.24.36
     recorrerNumero() {
         let inicioCol = this.columna;
         let buffer = "";
-        let esDecimal = false;
-        while (this.pos < this.texto.length && (this.esDigito(this.texto[this.pos]) || this.texto[this.pos] === ".")) {
-            if (this.texto[this.pos] === ".") {
-                if (esDecimal) break;
-                esDecimal = true;
+        let puntosDecimales = 0; // cuenta puntos
+        let posPunto = -1; // posicion del 1er punto
+
+        while (this.pos < this.texto.length) {
+            const char = this.texto[this.pos];
+
+            // Si es un dígito, se agrega al buffer
+            if (this.esDigito(char)) {
+                buffer += char;
+                this.recorrido.push({ estado: "NUM", char: char, next: "NUM" });
+                this.avanzar();
             }
-            buffer += this.texto[this.pos];
-            this.recorrido.push({ estado: "NUM", char: this.texto[this.pos], next: "NUM" });
-            this.avanzar();
+            // Si es un punto decimal
+            else if (char === ".") {
+                puntosDecimales++;
+                if (puntosDecimales === 1) {
+                    // 1er punto permitido
+                    buffer += char;
+                    posPunto = buffer.length - 1; // se guarda la pos, en el buffer
+                    this.recorrido.push({ estado: "NUM", char: char, next: "NUM" });
+                    this.avanzar();
+                } else {
+                    // se reporta el 2do punto
+                    this.errors.push(new Error(
+                        "Léxico", 
+                        buffer + char, //muestra numero hasta otro punto
+                        "Número decimal inválido", 
+                        this.linea, 
+                        this.columna
+                    ));
+                    this.avanzar(); // se avanza para salir del bucle
+                    return;
+                }
+            }
+            // Si no es ni dígito ni punto, se deja de leer el numero
+            else {
+                break;
+            }
         }
 
-        this.tokens.push(new Token(esDecimal ? "DOUBLE" : "INT", buffer, this.linea, inicioCol));
+        // validar no teerminar con punto para un numero 12.
+        if (puntosDecimales > 0 && buffer[buffer.length - 1] === ".") {
+            this.errors.push(new Error(
+                "Léxico", 
+                buffer, 
+                "Número decimal inválido", 
+                this.linea, 
+                inicioCol
+            ));
+            return;
+        }
+
+        // validacion para puntos decimales
+        if (buffer[0] === ".") {
+            this.errors.push(new Error(
+                "Léxico", 
+                buffer, 
+                "Número decimal inválido", 
+                this.linea, 
+                inicioCol
+            ));
+            return;
+        }
+
+        // aqui determina que el numero es valido
+        const tipoToken = (puntosDecimales === 1) ? "DOUBLE" : "INT";
+        this.tokens.push(new Token(tipoToken, buffer, this.linea, inicioCol));
     }
 
     recorrerCadena() {
@@ -157,7 +221,7 @@ export class Lexer {
             return;
         }
 
-        // verificador de operadores
+        // verificar de operadores
         if (char === "=" || char === "+" || char === "-" || 
             char === "*" || char === "/" || char === "%" || 
             char === ">" || char === "<" || char === "!") {
@@ -190,4 +254,23 @@ export class Lexer {
 
     esLetra(c) { return (c >= "A" && c <= "Z") || (c >= "a" && c <= "z"); }
     esDigito(c) { return (c >= "0" && c <= "9"); }
+
+    // recorrer comentario
+    recorrerComentario() {
+        let inicioCol = this.columna;
+        let buffer = "//";
+
+        // para traducir comentario '//'
+        this.avanzar(); // Salta el primer '/'
+        this.avanzar(); // Salta el segundo '/'
+
+        //lee hasta el final de la linea
+        while (this.pos < this.texto.length && this.texto[this.pos] !== "\n") {
+            buffer += this.texto[this.pos];
+            this.avanzar();
+        }
+
+        // agrega el token de comentario
+        this.tokens.push(new Token("COMENTARIO", buffer, this.linea, inicioCol));
+    }
 }
