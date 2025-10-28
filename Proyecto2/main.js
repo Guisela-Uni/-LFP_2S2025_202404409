@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tokensModal = document.getElementById('tokensModal');
     const tokensReportDiv = document.getElementById('tokensReport');
     const closeTokensModal = document.getElementById('closeTokensModal');
+    const downloadTokensReportBtn = document.getElementById('downloadTokensReport')
     // Referencias para el menú "Archivo" 
     const newFileLink = document.getElementById('newFile');
     const openFileLink = document.getElementById('openFile');
@@ -21,25 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const helpModal = document.getElementById('helpModal');
     const closeHelpModal = document.getElementById('closeHelpModal');
     // Función principal para traducir el código
+
     function traducirCodigo() {
-        const codigoJava = javaCodeTextarea.value;
+        let codigoJava = javaCodeTextarea.value;
         tokensReportDiv.innerHTML = '';
 
         try {
-            // primero análisis Léxico
+            // Preprocesamiento para extraer SOLO el cuerpo de main 
+            const regexMain = /public\s+static\s+void\s+main\s*\([^)]*\)\s*\{([\s\S]*)\}/;
+            const match = codigoJava.match(regexMain);
+            
+            if (match && match[1]) {
+                // Extraer el cuerpo de main y eliminar las llaves de la clase
+                codigoJava = match[1].trim();
+                // Eliminar la última llave de cierre de la clase si existe
+                if (codigoJava.endsWith('}')) {
+                    codigoJava = codigoJava.slice(0, -1).trim();
+                }
+            } else {
+                // Si no se encuentra main, usar el código completo (fallback)
+                console.warn("No se encontró el método main. Usando el código completo.");
+            }
+
+            // primero Análisis Léxico
             const lexer = new Lexer(codigoJava);
             const tokens = lexer.analizar();
             const erroresLexicos = lexer.errors;
 
-            console.log("Tokens generados:", tokens);
-
-            // segundo análisis Sintáctico
+            //segundo Análisis Sintáctico
             const parser = new Parser(tokens);
             const resultadoParser = parser.analizar();
             const erroresSintacticos = resultadoParser.errors;
             const codigoPython = resultadoParser.python;
-
-            console.log("Errores sintácticos encontrados:", erroresSintacticos);
 
             pythonCodePre.textContent = codigoPython;
             resultSection.style.display = 'block';
@@ -241,5 +255,47 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === helpModal) {
             helpModal.style.display = 'none';
         }
+    });
+
+    // ------- función para "Descargar reporte de tokens" -------
+    downloadTokensReportBtn.addEventListener('click', () => {
+        // Obtener el contenido del reporte
+        const reporteHTML = tokensReportDiv.innerHTML;
+
+        // Crear el contenido completo de la página HTML
+        const paginaHTMLCompleta = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reporte de Tokens - Traductor Java → Python</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+            h1 { color: #333; text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+            th { background-color: #4fc3f7; color: white; }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+            .error { background-color: #ffebee; }
+            .token { background-color: #e8f5e9; }
+        </style>
+    </head>
+    <body>
+        <h1>📊 Reporte de errores y tokens</h1>
+        ${reporteHTML}
+    </body>
+    </html>`;
+
+        // Crear un Blob y descargarlo
+        const blob = new Blob([paginaHTMLCompleta], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reporte_tokens.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     });
 });
